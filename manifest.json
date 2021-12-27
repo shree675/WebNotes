@@ -9,5 +9,10 @@
   "action": {
     "default_popup": "popup.html"
   },
-  "host_permissions": ["https://*/*"]
+  "host_permissions": ["https://*/*"],
+  "icons": {
+    "16": "icons/notes16.png",
+    "48": "icons/notes48.png",
+    "128": "icons/notes128.png"
+  }
 }
