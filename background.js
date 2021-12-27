@@ -1,31 +1,16 @@
 //@ts-check
 
-/*
-allnotes:
-{
-  index,
-  website,
-  text,
-  oRect,
-  content
-}
-*/
-
 var printData;
 var all;
 
-// chrome.runtime.onInstalled.addListener(() => {
-//   chrome.storage.sync.set({ index: 0 });
-//   chrome.storage.sync.set({ allnotes: [] });
-// });
+const saveicon =
+  "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE5IDIxSDVhMiAyIDAgMCAxLTItMlY1YTIgMiAwIDAgMSAyLTJoMTFsNSA1djExYTIgMiAwIDAgMS0yIDJ6IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyIiBjbGFzcz0ic3Ryb2tlLTAwMDAwMCI+PC9wYXRoPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiIGQ9Ik0xNyAyMXYtOEg3djhNNyAzdjVoOCIgY2xhc3M9InN0cm9rZS0wMDAwMDAiPjwvcGF0aD48L3N2Zz4=";
+const deleteicon =
+  "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMzIgMzIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZGF0YS1uYW1lPSJMYXllciAxNyI+PHBhdGggZD0iTTI0IDMxSDhhMyAzIDAgMCAxLTMtM1Y5YTEgMSAwIDAgMSAyIDB2MTlhMSAxIDAgMCAwIDEgMWgxNmExIDEgMCAwIDAgMS0xVjlhMSAxIDAgMCAxIDIgMHYxOWEzIDMgMCAwIDEtMyAzWk0yOCA3SDRhMSAxIDAgMCAxIDAtMmgyNGExIDEgMCAwIDEgMCAyWiIgZmlsbD0iI2ZmZmZmZiIgY2xhc3M9ImZpbGwtMTAxODIwIj48L3BhdGg+PHBhdGggZD0iTTIwIDdhMSAxIDAgMCAxLTEtMVYzaC02djNhMSAxIDAgMCAxLTIgMFYyYTEgMSAwIDAgMSAxLTFoOGExIDEgMCAwIDEgMSAxdjRhMSAxIDAgMCAxLTEgMVpNMTYgMjZhMSAxIDAgMCAxLTEtMVYxMWExIDEgMCAwIDEgMiAwdjE0YTEgMSAwIDAgMS0xIDFaTTIxIDI0YTEgMSAwIDAgMS0xLTFWMTNhMSAxIDAgMCAxIDIgMHYxMGExIDEgMCAwIDEtMSAxWk0xMSAyNGExIDEgMCAwIDEtMS0xVjEzYTEgMSAwIDAgMSAyIDB2MTBhMSAxIDAgMCAxLTEgMVoiIGZpbGw9IiNmZmZmZmYiIGNsYXNzPSJmaWxsLTEwMTgyMCI+PC9wYXRoPjwvZz48L3N2Zz4=";
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   chrome.storage.sync.get("allnotes", ({ allnotes }) => {
-    console.log(allnotes);
     all = allnotes;
-  });
-  chrome.storage.sync.get("index", ({ index }) => {
-    console.log(index);
   });
   // chrome.storage.sync.set({ allnotes: [] });
   // chrome.storage.sync.set({ index: 0 });
@@ -34,19 +19,17 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     chrome.scripting.executeScript({
       target: { tabId: tabId },
       function: displayNotes,
-      args: [all, tab.url],
+      args: [all, tab.url, saveicon, deleteicon],
     });
 
-    function displayNotes(all, url) {
-      chrome.runtime.sendMessage({ print: true, data: "allnotes" });
-      chrome.runtime.sendMessage({ print: true, data: all });
-      var elements = Array(all.length);
+    function displayNotes(all, url, saveicon, deleteicon) {
+      // chrome.runtime.sendMessage({ print: true, data: "allnotes" });
+      // chrome.runtime.sendMessage({ print: true, data: all });
       var highlights = Array(all.length);
       var divs = Array(all.length);
 
       for (var index = 0; index < all.length; index++) {
         var note = all[index];
-        chrome.runtime.sendMessage({ print: true, data: note });
         if (note.website === url) {
           var left = note.oRect.left;
           var top = note.oRect.top;
@@ -123,8 +106,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
               }
             }
           };
-          save.src =
-            "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE5IDIxSDVhMiAyIDAgMCAxLTItMlY1YTIgMiAwIDAgMSAyLTJoMTFsNSA1djExYTIgMiAwIDAgMS0yIDJ6IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyIiBjbGFzcz0ic3Ryb2tlLTAwMDAwMCI+PC9wYXRoPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiIGQ9Ik0xNyAyMXYtOEg3djhNNyAzdjVoOCIgY2xhc3M9InN0cm9rZS0wMDAwMDAiPjwvcGF0aD48L3N2Zz4=";
+          save.src = saveicon;
 
           var img = document.createElement("img");
           img.id = "web-notes-chrome-ext-im-" + note.index;
@@ -151,8 +133,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
             all.splice(all.indexOf(tempnote), 1);
             chrome.storage.sync.set({ allnotes: all });
           };
-          img.src =
-            "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMzIgMzIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZGF0YS1uYW1lPSJMYXllciAxNyI+PHBhdGggZD0iTTI0IDMxSDhhMyAzIDAgMCAxLTMtM1Y5YTEgMSAwIDAgMSAyIDB2MTlhMSAxIDAgMCAwIDEgMWgxNmExIDEgMCAwIDAgMS0xVjlhMSAxIDAgMCAxIDIgMHYxOWEzIDMgMCAwIDEtMyAzWk0yOCA3SDRhMSAxIDAgMCAxIDAtMmgyNGExIDEgMCAwIDEgMCAyWiIgZmlsbD0iI2ZmZmZmZiIgY2xhc3M9ImZpbGwtMTAxODIwIj48L3BhdGg+PHBhdGggZD0iTTIwIDdhMSAxIDAgMCAxLTEtMVYzaC02djNhMSAxIDAgMCAxLTIgMFYyYTEgMSAwIDAgMSAxLTFoOGExIDEgMCAwIDEgMSAxdjRhMSAxIDAgMCAxLTEgMVpNMTYgMjZhMSAxIDAgMCAxLTEtMVYxMWExIDEgMCAwIDEgMiAwdjE0YTEgMSAwIDAgMS0xIDFaTTIxIDI0YTEgMSAwIDAgMS0xLTFWMTNhMSAxIDAgMCAxIDIgMHYxMGExIDEgMCAwIDEtMSAxWk0xMSAyNGExIDEgMCAwIDEtMS0xVjEzYTEgMSAwIDAgMSAyIDB2MTBhMSAxIDAgMCAxLTEgMVoiIGZpbGw9IiNmZmZmZmYiIGNsYXNzPSJmaWxsLTEwMTgyMCI+PC9wYXRoPjwvZz48L3N2Zz4=";
+          img.src = deleteicon;
 
           divs[index].appendChild(button);
           divs[index].appendChild(img);

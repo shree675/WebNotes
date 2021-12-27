@@ -1,10 +1,9 @@
 //@ts-check
 
-const deleteicon =
-  "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMzIgMzIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZGF0YS1uYW1lPSJMYXllciAxNyI+PHBhdGggZD0iTTI0IDMxSDhhMyAzIDAgMCAxLTMtM1Y5YTEgMSAwIDAgMSAyIDB2MTlhMSAxIDAgMCAwIDEgMWgxNmExIDEgMCAwIDAgMS0xVjlhMSAxIDAgMCAxIDIgMHYxOWEzIDMgMCAwIDEtMyAzWk0yOCA3SDRhMSAxIDAgMCAxIDAtMmgyNGExIDEgMCAwIDEgMCAyWiIgZmlsbD0iI2ZmZmZmZiIgY2xhc3M9ImZpbGwtMTAxODIwIj48L3BhdGg+PHBhdGggZD0iTTIwIDdhMSAxIDAgMCAxLTEtMVYzaC02djNhMSAxIDAgMCAxLTIgMFYyYTEgMSAwIDAgMSAxLTFoOGExIDEgMCAwIDEgMSAxdjRhMSAxIDAgMCAxLTEgMVpNMTYgMjZhMSAxIDAgMCAxLTEtMVYxMWExIDEgMCAwIDEgMiAwdjE0YTEgMSAwIDAgMS0xIDFaTTIxIDI0YTEgMSAwIDAgMS0xLTFWMTNhMSAxIDAgMCAxIDIgMHYxMGExIDEgMCAwIDEtMSAxWk0xMSAyNGExIDEgMCAwIDEtMS0xVjEzYTEgMSAwIDAgMSAyIDB2MTBhMSAxIDAgMCAxLTEgMVoiIGZpbGw9IiNmZmZmZmYiIGNsYXNzPSJmaWxsLTEwMTgyMCI+PC9wYXRoPjwvZz48L3N2Zz4=";
 const saveicon =
   "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE5IDIxSDVhMiAyIDAgMCAxLTItMlY1YTIgMiAwIDAgMSAyLTJoMTFsNSA1djExYTIgMiAwIDAgMS0yIDJ6IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyIiBjbGFzcz0ic3Ryb2tlLTAwMDAwMCI+PC9wYXRoPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiIGQ9Ik0xNyAyMXYtOEg3djhNNyAzdjVoOCIgY2xhc3M9InN0cm9rZS0wMDAwMDAiPjwvcGF0aD48L3N2Zz4=";
 var i, all;
+const popup = document.getElementById("popup-web-notes");
 
 document.addEventListener("DOMContentLoaded", async () => {
   chrome.storage.sync.get("index", ({ index }) => {
@@ -15,22 +14,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  popup.innerHTML = "Creating a new note...";
+
+  chrome.runtime.sendMessage({ print: true, data: "initial" });
 
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
     function: insertNote,
-    args: [i, tab.url, all],
+    args: [i, tab.url, all, saveicon],
   });
+  popup.innerHTML = "Successfully created";
 
-  function insertNote(i, url, all) {
+  function insertNote(i, url, all, saveicon) {
     var s = window.getSelection();
     var oRange = s.getRangeAt(0);
     var oRect = oRange.getBoundingClientRect();
     var top = oRect["top"];
     var left = oRect["left"];
-    chrome.runtime.sendMessage({ print: true, data: "initial" });
-    chrome.runtime.sendMessage({ print: true, data: i });
-    chrome.runtime.sendMessage({ print: true, data: all });
+    chrome.runtime.sendMessage({ print: true, data: "32" });
 
     var highlight = document.createElement("div");
     highlight.style.width = oRect["width"] + "px";
@@ -42,6 +43,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     highlight.style.top = top + window.scrollY + "px";
     highlight.style.left = left + "px";
     highlight.style.cursor = "pointer";
+
+    chrome.runtime.sendMessage({ print: true, data: "46" });
 
     var div = document.createElement("div");
     div.id = "web-notes-chrome-ext-" + (i + 1);
@@ -55,14 +58,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     div.style.background = "rgba(56,161,197,0.62)";
     div.style.boxShadow = "2px 2px 8px rgba(0,0,0,0.6)";
 
+    chrome.runtime.sendMessage({ print: true, data: "60" });
+
     var textarea = document.createElement("textarea");
     textarea.style.height = "100px";
     textarea.style.color = "white";
     textarea.style.background = "rgba(56,161,197)";
     textarea.style.paddingLeft = "2px";
     textarea.style.fontWeight = "bold";
-    textarea.style.marginRight = "-40px";
+    textarea.style.marginRight = "-30px";
     textarea.style.fontSize = "16px";
+
+    chrome.runtime.sendMessage({ print: true, data: "71" });
 
     var button = document.createElement("button");
     button.style.float = "right";
@@ -72,10 +79,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     button.style.right = "10px";
     button.style.color = "white";
     button.style.margin = "0px";
+    button.style.background = "rgba(0,0,0,0)";
+    button.style.cursor = "pointer";
+    button.style.border = "none";
+    button.style.color = "white";
     button.onclick = function close() {
       var element = document.getElementById("web-notes-chrome-ext-" + (i + 1));
       element.style.visibility = "hidden";
     };
+
+    chrome.runtime.sendMessage({ print: true, data: "91" });
 
     var save = document.createElement("img");
     save.style.float = "right";
@@ -88,8 +101,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     save.style.width = "16px";
     save.style.cursor = "pointer";
     save.onclick = function sav() {
-      // save content
-
       var newNote = {
         index: i + 1,
         website: url,
@@ -109,20 +120,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       chrome.storage.sync.set({ index: i + 1 });
       all.push(newNote);
       chrome.storage.sync.set({ allnotes: all });
-
-      chrome.runtime.sendMessage({ print: true, data: "save" });
-      // chrome.runtime.sendMessage({ print: true, data: all.push(newNote) });
-      chrome.runtime.sendMessage({ print: true, data: all });
     };
-    save.src =
-      "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE5IDIxSDVhMiAyIDAgMCAxLTItMlY1YTIgMiAwIDAgMSAyLTJoMTFsNSA1djExYTIgMiAwIDAgMS0yIDJ6IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyIiBjbGFzcz0ic3Ryb2tlLTAwMDAwMCI+PC9wYXRoPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiIGQ9Ik0xNyAyMXYtOEg3djhNNyAzdjVoOCIgY2xhc3M9InN0cm9rZS0wMDAwMDAiPjwvcGF0aD48L3N2Zz4=";
+    save.src = saveicon;
+
+    chrome.runtime.sendMessage({ print: true, data: "126" });
 
     div.appendChild(button);
-    div.appendChild(img);
     div.appendChild(save);
     div.appendChild(textarea);
     document.body.appendChild(div);
-    // chrome.runtime.sendMessage({ print: true, data: document.getElementById("web-notes-chrome-ext-" + (i + 1)) });
+
+    chrome.runtime.sendMessage({ print: true, data: "133" });
 
     highlight.onclick = function toggle() {
       var element = document.getElementById("web-notes-chrome-ext-" + (i + 1));
@@ -133,5 +141,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     };
     document.body.appendChild(highlight);
+
+    chrome.runtime.sendMessage({ print: true, data: "146" });
   }
 });
