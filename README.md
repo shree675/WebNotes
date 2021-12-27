@@ -13,4 +13,4 @@ These notes are saved to the user's Google account if sync in enabled. Otherwise
 ![webnotes](https://user-images.githubusercontent.com/58718144/147495698-f91fa82a-ac31-44dc-a0d7-3f3f55d083e4.gif)
 
 ## Version
-v1.0.0
+v1.0
