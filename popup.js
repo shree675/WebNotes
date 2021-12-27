@@ -16,8 +16,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   popup.innerHTML = "Creating a new note...";
 
-  chrome.runtime.sendMessage({ print: true, data: "initial" });
-
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
     function: insertNote,
@@ -31,7 +29,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     var oRect = oRange.getBoundingClientRect();
     var top = oRect["top"];
     var left = oRect["left"];
-    chrome.runtime.sendMessage({ print: true, data: "32" });
 
     var highlight = document.createElement("div");
     highlight.style.width = oRect["width"] + "px";
@@ -44,8 +41,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     highlight.style.left = left + "px";
     highlight.style.cursor = "pointer";
 
-    chrome.runtime.sendMessage({ print: true, data: "46" });
-
     var div = document.createElement("div");
     div.id = "web-notes-chrome-ext-" + (i + 1);
     div.style.position = "absolute";
@@ -57,9 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     div.style.paddingTop = "30px";
     div.style.background = "rgba(56,161,197,0.62)";
     div.style.boxShadow = "2px 2px 8px rgba(0,0,0,0.6)";
-
-    chrome.runtime.sendMessage({ print: true, data: "60" });
-
+    
     var textarea = document.createElement("textarea");
     textarea.style.height = "100px";
     textarea.style.color = "white";
@@ -68,8 +61,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     textarea.style.fontWeight = "bold";
     textarea.style.marginRight = "-30px";
     textarea.style.fontSize = "16px";
-
-    chrome.runtime.sendMessage({ print: true, data: "71" });
 
     var button = document.createElement("button");
     button.style.float = "right";
@@ -87,8 +78,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       var element = document.getElementById("web-notes-chrome-ext-" + (i + 1));
       element.style.visibility = "hidden";
     };
-
-    chrome.runtime.sendMessage({ print: true, data: "91" });
 
     var save = document.createElement("img");
     save.style.float = "right";
@@ -123,14 +112,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
     save.src = saveicon;
 
-    chrome.runtime.sendMessage({ print: true, data: "126" });
-
     div.appendChild(button);
     div.appendChild(save);
     div.appendChild(textarea);
     document.body.appendChild(div);
-
-    chrome.runtime.sendMessage({ print: true, data: "133" });
 
     highlight.onclick = function toggle() {
       var element = document.getElementById("web-notes-chrome-ext-" + (i + 1));
@@ -141,7 +126,5 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     };
     document.body.appendChild(highlight);
-
-    chrome.runtime.sendMessage({ print: true, data: "146" });
   }
 });
